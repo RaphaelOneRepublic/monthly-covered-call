@@ -13,7 +13,7 @@ security_value = 0
 money = capital
 
 holding_security = 0
-holding_option = None
+holding_option: str = None
 
 etf_daily = pd.read_excel("data/data.xlsx")
 
@@ -128,11 +128,8 @@ for _date in etf_daily.date:
             change = open_covered_call(at_the_money_call, _date)
         else:
             change = open_call(at_the_money_call, _date)
-    elif signal == 1:
-        if holding_option is None:
-            change = 0
-        else:
-            change = close_call(holding_option, _date)
+    elif signal == 1 and holding_option is not None:
+        change = close_call(holding_option, _date)
     money += change
     option_value = unit_shares * size * get_call_close(holding_option, _date) if holding_option is not None else 0
     security_value = unit_shares * size * get_underlying_close(_date) if holding_security == 1 else 0
